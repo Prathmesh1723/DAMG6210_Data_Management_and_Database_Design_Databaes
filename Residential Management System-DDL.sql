@@ -4,12 +4,19 @@ declare
     v_sql varchar(2000);
 begin
    dbms_output.put_line('Start schema cleanup');
-   for i in (select 'TENANT' table_name from dual union all
-   select 'HOUSE' table_name from dual union all
+   for i in (
+             select 'LEASE_AGREEMENT' table_name from dual union all
+             select 'TENANT' table_name from dual union all
              select 'OWNER' table_name from dual union all
+             select 'HOUSE' table_name from dual union all
+             select 'LEASE_PAYMENTS' table_name from dual union all
+             select 'SECURITY_DEPOSIT_AMOUNT' table_name from dual union all
              select 'RESIDENT_MANAGEMENT' from dual union all
-             select 'ACCOUNT_TYPE' table_name from dual
-             
+             select 'SECURITY_DEPOSIT_RETURN' from dual union all
+             select 'ROLES' from dual union all
+             select 'REQUESTS' table_name from dual union all
+             select 'EMPLOYEES' table_name from dual union all
+             select 'ACCOUNT_TYPE' table_name from dual    
    )
    loop
    dbms_output.put_line('....Drop table '||i.table_name);
@@ -32,6 +39,9 @@ exception
    when others then
       dbms_output.put_line('Failed to execute code:'||sqlerrm);
 end;
+
+SELECT * 
+FROM sys.foreign_keys;
 
 -- Create the Account_type table
 CREATE TABLE Account_type (
@@ -98,19 +108,15 @@ CREATE TABLE Lease_agreement (
   lease_Term NUMBER(10) NOT NULL,
   security_Deposit NUMBER(10,2) NOT NULL,
   lease_Status NUMBER(1) NOT NULL,
-  monthly_Rent NUMBER(10,2) NOT NULL,
-  FOREIGN KEY (unit_no) REFERENCES House(unit_no),
-  FOREIGN KEY (owner_id) REFERENCES Owner(owner_id),
-  FOREIGN KEY (tenant_id) REFERENCES Tenant(tenant_id)
+  monthly_Rent NUMBER(10,2) NOT NULL
 );
 
 
 INSERT INTO Lease_agreement (lease_no, unit_no, owner_id, tenant_id, lease_Date, lease_Startdate, lease_Enddate, lease_Term, security_Deposit, lease_Status, monthly_Rent)
-select 1001, 101, 552, 1063, '2022-01-01', '2022-02-01', '2023-01-31', 12, 2000, 1, 1000 from dual union all
-select 1002, 102, 522, 1066, '2021-01-02', '2021-01-02', '2023-01-31', 24, 1500, 1, 800 from dual union all
-select 1003, 103, 522, 1206, '2022-01-03', '2022-02-01', '2023-01-31', 12, 1000, 1, 600 from dual union all
-select 1004, 104, 480, 1045, '2022-01-04', '2022-02-01', '2023-01-31', 12, 2500, 1, 1200 from dual union all
-select 1008, 108, 488, 1008, '2022-01-08', '2022-02-01', '2023-01-31', 12, 1000, 1, 1600 from dual;
+select 1001, 101, 11, 1063, TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 1000 from dual union all
+select 1002, 102, 11, 1066,  TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 24, 1500, 1, 800 from dual union all
+select 1003, 103, 14, 1206, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 600 from dual union all
+select 1008, 108, 21, 1008, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 1600 from dual;
 
 
 -- Create the house table
@@ -125,8 +131,6 @@ CREATE TABLE House (
   no_of_bedrooms NUMBER(2) NOT NULL,
   no_of_bathrooms NUMBER(2) NOT NULL,
   residency_no NUMBER(10) NOT NULL,
-  FOREIGN KEY (owner_id) REFERENCES Owner(owner_id),
-  FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no),
   CHECK (unit_type IN ('flat', 'condo', 'apartment', 'house')),
   CHECK (parking_spot IN ('Y', 'N')),
   CHECK (inUnit_Laundry IN ('Y', 'N')),
@@ -135,13 +139,12 @@ CREATE TABLE House (
 
 
 INSERT INTO House (unit_no, owner_id, building_no, unit_type, parking_spot, inUnit_Laundry, pets_Allowed, no_of_bedrooms, no_of_bathrooms, residency_no)
-select 101, 11, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
-select 102, 18, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
-select 201, 21, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2001 from dual union all
-select 202, 11, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
-select 301, 14, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 3001 from dual union all
-select 401, 21, 'B401', 'house', 'Y', 'N', 'Y', 4, 3, 4001 from dual union all
-select 402, 21, 'B401', 'house', 'Y', 'Y', 'N', 3, 1, 3004 from dual;
+select 101, 552, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
+select 102, 552, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
+select 103, 488, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2001 from dual union all
+select 108, 522, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
+select 104, 480, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 3001 from dual;
+
 
 -- Create the Resident Management Table
 CREATE TABLE Resident_Management (
@@ -150,17 +153,13 @@ CREATE TABLE Resident_Management (
   residency_last_name VARCHAR2(50) NOT NULL,
   request_id NUMBER(10) NOT NULL,
   address_line1 VARCHAR2(100) NOT NULL,
-  address_line2 VARCHAR2(100) NOT NULL,
-  CONSTRAINT fk_request_id FOREIGN KEY (request_id) REFERENCES Requests(request_id)
+  address_line2 VARCHAR2(100) NOT NULL
 );
 
 INSERT INTO Resident_Management (residency_no, residency_first_name, residency_last_name, request_id, address_line1, address_line2)
-select 1001, 'John', 'Doe', 100, '123 Main St', 'Apt 4B' from dual union all
-select 1002, 'Jane', 'Smith', 110, '456 Elm St', 'Unit 2' from dual union all
-select 2002, 'Bob', 'Johnson', 1003, '789 Oak St', 'Suite 10' from dual union all
-select 3004, 'Sarah', 'Williams', 1004, '234 Pine St', 'Apt 7C' from dual union all
-select 2001, 'Michael', 'Brown', 1005, '567 Maple St', 'Unit 3B' from dual union all
-select 1001, 'Lisa', 'Davis', 1006, '890 Cedar St', 'Suite 5A' from dual;
+select 1001, 'John', 'Doe', 199, '123 Main St', 'Apt 4B' from dual union all
+select 1002, 'Jane', 'Smith', 202, '456 Elm St', 'Unit 2' from dual union all
+select 2002, 'Bob', 'Johnson', 224, '789 Oak St', 'Suite 10' from dual;
 
 CREATE TABLE Requests (
     request_id NUMBER PRIMARY KEY,
@@ -171,12 +170,9 @@ CREATE TABLE Requests (
     date_logged DATE NOT NULL,
     status VARCHAR2(20) NOT NULL,
     due_date DATE NOT NULL,
-    CONSTRAINT fk_reported_to FOREIGN KEY (reported_to_Employee_id)
-    REFERENCES Employees (Employee_id),
     CONSTRAINT chk_status CHECK (status IN ('Open', 'In Progress', 'Completed')),
     CONSTRAINT chk_priority CHECK (priority IN ('High', 'Medium', 'Low')),
     CONSTRAINT chk_request_type CHECK (request_type IN ('Maintenance', 'Plumbing', 'Pest Control')),
-    CONSTRAINT chk_date_logged CHECK (date_logged <= SYSDATE),
     CONSTRAINT chk_due_date CHECK (due_date >= date_logged)
 );
 
@@ -193,19 +189,12 @@ CREATE TABLE Employees (
   account_id NUMBER(10) NOT NULL,
   role_id NUMBER(1) NOT NULL,
   residency_no NUMBER(10) NOT NULL,
-  CONSTRAINT fk_account_id
-    FOREIGN KEY (account_id)
-    REFERENCES Account_type(account_id),
-  CONSTRAINT fk_residency_no
-    FOREIGN KEY (residency_no)
-    REFERENCES Resident_Management(residency_no),
   CONSTRAINT chk_role_id
     CHECK (role_id IN (1,2))
 );
 
 INSERT INTO Employees (employee_id, account_id, role_id, residency_no)
 select 22102, 6045, 1, 2001 from dual union all
-select 22102, 6046, 1, 2002 from dual union all
 select 22022, 6055, 2, 2001 from dual union all
 select 22100, 6056, 1, 3001 from dual;
 
@@ -239,14 +228,40 @@ CREATE TABLE security_Deposit_Return (
   return_date DATE,
   security_deposit_amount NUMBER,
   amount_returned DECIMAL,
-  lease_no NUMBER,
-  CONSTRAINT fk_lease_no FOREIGN KEY (lease_no) REFERENCES Lease_Agreement(lease_no)
+  lease_no NUMBER
 );
 
 INSERT INTO security_Deposit_Return (payment_id, return_date, security_deposit_amount, amount_returned, lease_no)
 Select 1, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 1000, 800, 1200 from dual union all
 select 2, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 1500, 1200, 1008 from dual union all
 select 4, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 2500, 2500, 1002 from dual;
+
+ALTER TABLE security_Deposit_Return
+ADD CONSTRAINT fk_lease_no FOREIGN KEY (lease_no) REFERENCES Lease_Agreement(lease_no);
+
+
+
+ALTER TABLE Lease_Agreement
+ADD CONSTRAINT unit_no FOREIGN KEY (unit_no) REFERENCES House(unit_no)
+ADD CONSTRAINT owner_id FOREIGN KEY (owner_id) REFERENCES owner(owner_id)
+ADD CONSTRAINT tenant_id FOREIGN KEY (tenant_id) REFERENCES Tenant(tenant_id);
+
+
+ALTER TABLE House
+ADD CONSTRAINT owner_id FOREIGN KEY (owner_id) REFERENCES Owner(owner_id)
+ADD CONSTRAINT residency_no FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no);
+
+ALTER TABLE Residency_Management
+ADD CONSTRAINT request_id FOREIGN KEY (request_id) REFERENCES Requests(request_id);
+
+ALTER TABLE Requests
+ADD CONSTRAINT reported_to_Employee_id FOREIGN KEY (reported_to_Employee_id) REFERENCES Employees(Employee_id);
+
+ALTER TABLE Employees
+ADD CONSTRAINT account_id FOREIGN KEY (account_id) REFERENCES Account_type(account_id)
+ADD CONSTRAINT residency_no FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no);
+
+
 
 COMMIT;
 
