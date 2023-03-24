@@ -16,9 +16,27 @@ begin
              select 'ROLES' from dual union all
              select 'REQUESTS' table_name from dual union all
              select 'EMPLOYEES' table_name from dual union all
+             select 'INSPECTION_CHECK' table_name from dual union all
              select 'ACCOUNT_TYPE' table_name from dual    
    )
    loop
+   dbms_output.put_line('....Drop foreign keys for table '||i.table_name);
+   begin
+       for j in (
+               select constraint_name, table_name
+               from user_constraints
+               where constraint_type = 'R' and r_constraint_name in (
+                   select constraint_name
+                   from user_constraints
+                   where table_name = i.table_name and constraint_type in ('P', 'U')
+               )
+           )
+       loop
+           v_sql := 'alter table '||j.table_name||' drop constraint '||j.constraint_name;
+           execute immediate v_sql;
+           dbms_output.put_line('........Foreign key '||j.constraint_name||' dropped successfully');
+       end loop;
+       end;
    dbms_output.put_line('....Drop table '||i.table_name);
    begin
        select 'Y' into v_table_exists
@@ -40,8 +58,6 @@ exception
       dbms_output.put_line('Failed to execute code:'||sqlerrm);
 end;
 
-SELECT * 
-FROM sys.foreign_keys;
 
 -- Create the Account_type table
 CREATE TABLE Account_type (
@@ -63,7 +79,7 @@ INSERT INTO Account_type (account_id, account_type, first_name, last_name, age, 
   select  6044, 'tenant', 'David', 'Brown', 50, 'davidbrown@example.com', '567-89-1234', 'password5' from dual union all
   select  6045, 'employee', 'Emily', 'Davis', 28, 'emilydavis@example.com', '901-23-4567', 'password6' from dual union all
   select  6055, 'employee', 'Rose', 'Davinci', 29, 'rosedavis@example.com', '901-24-5567', 'password65' from dual union all
-  select  6046, 'employee', 'Steven', 'Wilson', 45, 'stevenwilson@example.com', '345-67-8901', 'password7' from dual union all
+  select  6056, 'employee', 'Steven', 'Wilson', 45, 'stevenwilson@example.com', '345-67-8901', 'password7' from dual union all
   select  6066, 'owner', 'Steff', 'Wild', 35, 'steff@example.com', '345-67-8601', 'password8' from dual union all
   select  6070, 'owner', 'Derek', 'Roy', 65, 'derekRoy@example.com', '345-67-8801', 'password9' from dual union all
   select  6047, 'tenant', 'Karen', 'Miller', 32, 'karenmiller@example.com', '678-90-1234', 'password11' from dual;
@@ -113,10 +129,9 @@ CREATE TABLE Lease_agreement (
 
 
 INSERT INTO Lease_agreement (lease_no, unit_no, owner_id, tenant_id, lease_Date, lease_Startdate, lease_Enddate, lease_Term, security_Deposit, lease_Status, monthly_Rent)
-select 1001, 101, 11, 1063, TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 1000 from dual union all
-select 1002, 102, 11, 1066,  TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 24, 1500, 1, 800 from dual union all
-select 1003, 103, 14, 1206, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 600 from dual union all
-select 1008, 108, 21, 1008, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 1600 from dual;
+select 1200, 101, 11, 1063, TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 1000 from dual union all
+select 1000, 102, 11, 1066,  TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 24, 1500, 1, 800 from dual union all
+select 1080, 108, 21, 1008, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 1600 from dual;
 
 
 -- Create the house table
@@ -139,11 +154,11 @@ CREATE TABLE House (
 
 
 INSERT INTO House (unit_no, owner_id, building_no, unit_type, parking_spot, inUnit_Laundry, pets_Allowed, no_of_bedrooms, no_of_bathrooms, residency_no)
-select 101, 552, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
-select 102, 552, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
-select 103, 488, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2001 from dual union all
-select 108, 522, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
-select 104, 480, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 3001 from dual;
+select 101, 11, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
+select 102, 11, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
+select 103, 18, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2002 from dual union all
+select 108, 14, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
+select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual;
 
 
 -- Create the Resident Management Table
@@ -178,7 +193,7 @@ CREATE TABLE Requests (
 
 INSERT INTO Requests (request_id, logged_by, reported_to_Employee_id, request_type, priority, date_logged, status, due_date)
 select 199, 'John Doe', 22101, 'Maintenance', 'High', '01-JAN-2023', 'Open', '31-JAN-2023' from dual union all
-select 202, 'Jane Smith', 22102, 'Plumbing', 'Medium', '15-JAN-2023', 'In Progress', '15-FEB-2023' from dual union all
+select 202, 'Jane Smith', 22122, 'Plumbing', 'Medium', '15-JAN-2023', 'In Progress', '15-FEB-2023' from dual union all
 select 224, 'Bob Williams', 22100, 'Pest Control', 'Low', '25-JAN-2023', 'Completed', '28-JAN-2023' from dual;
 
 
@@ -194,9 +209,9 @@ CREATE TABLE Employees (
 );
 
 INSERT INTO Employees (employee_id, account_id, role_id, residency_no)
-select 22102, 6045, 1, 2001 from dual union all
-select 22022, 6055, 2, 2001 from dual union all
-select 22100, 6056, 1, 3001 from dual;
+select 22101, 6045, 1, 2002 from dual union all
+select 22122, 6055, 2, 2002 from dual union all
+select 22100, 6056, 1, 1002 from dual;
 
 CREATE TABLE Roles (
     role_id NUMBER PRIMARY KEY,
@@ -218,9 +233,9 @@ CREATE TABLE Lease_Payments (
 );
 
 INSERT INTO Lease_Payments (lease_payment_id, payment_type, payment_date, payment_amount, lease_no, late_fees)
-select 111, 'Cash', TO_DATE('2022-01-15', 'YYYY-MM-DD'), 1000, 1002, NULL from dual union all
-select 112, 'Credit Card', TO_DATE('2022-02-15', 'YYYY-MM-DD'), 1200, 1003, NULL from dual union all
-select 114, 'Check', TO_DATE('2022-03-15', 'YYYY-MM-DD'), 1500, 1008, 50 from dual ;
+select 111, 'Cash', TO_DATE('2022-01-15', 'YYYY-MM-DD'), 1000, 1000, NULL from dual union all
+select 112, 'Credit Card', TO_DATE('2022-02-15', 'YYYY-MM-DD'), 1200, 1200, NULL from dual union all
+select 114, 'Check', TO_DATE('2022-03-15', 'YYYY-MM-DD'), 1500, 1080, 50 from dual ;
 
 --Create Security Deposit Returns Table
 CREATE TABLE security_Deposit_Return (
@@ -232,13 +247,31 @@ CREATE TABLE security_Deposit_Return (
 );
 
 INSERT INTO security_Deposit_Return (payment_id, return_date, security_deposit_amount, amount_returned, lease_no)
-Select 1, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 1000, 800, 1200 from dual union all
-select 2, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 1500, 1200, 1008 from dual union all
-select 4, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 2500, 2500, 1002 from dual;
+select 1, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 1000, 800, 1200 from dual union all
+select 2, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 1500, 1200, 1000 from dual union all
+select 4, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 2500, 2500, 1080 from dual;
+
+--Create Security Inspection Check Table
+CREATE TABLE Inspection_check (
+  inspection_id NUMBER PRIMARY KEY NOT NULL,
+  date_logged DATE NOT NULL,
+  inspected_by NUMBER NOT NULL,
+  Damages_found VARCHAR2(1) NOT NULL CHECK (Damages_found IN ('Y', 'N')),
+  cost_of_repairs NUMBER NOT NULL,
+  unit_no NUMBER NOT NULL,
+  CONSTRAINT fk_inspected_by FOREIGN KEY (inspected_by) REFERENCES Employees(employee_id),
+  CONSTRAINT fk_unit_no FOREIGN KEY (unit_no) REFERENCES House(unit_no)
+);
+
+
+INSERT INTO Inspection_check (inspection_id, date_logged, inspected_by, Damages_found, cost_of_repairs, unit_no)
+select 111, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 22101, 'N', 0, 101 from dual union all
+select 211, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 22100, 'Y', 500, 103 from dual union all
+select 303, TO_DATE('2022-03-01', 'YYYY-MM-DD'), 22100, 'N', 0, 102 from dual union all
+select 401, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 22100, 'Y', 1000, 108 from dual;
 
 ALTER TABLE security_Deposit_Return
-ADD CONSTRAINT fk_lease_no FOREIGN KEY (lease_no) REFERENCES Lease_Agreement(lease_no);
-
+ADD CONSTRAINT lease_no FOREIGN KEY (lease_no) REFERENCES Lease_Agreement(lease_no);
 
 
 ALTER TABLE Lease_Agreement
@@ -248,10 +281,10 @@ ADD CONSTRAINT tenant_id FOREIGN KEY (tenant_id) REFERENCES Tenant(tenant_id);
 
 
 ALTER TABLE House
-ADD CONSTRAINT owner_id FOREIGN KEY (owner_id) REFERENCES Owner(owner_id)
-ADD CONSTRAINT residency_no FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no);
+ADD CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES owner(owner_id)
+ADD CONSTRAINT fk_residency_no FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no);
 
-ALTER TABLE Residency_Management
+ALTER TABLE Resident_Management
 ADD CONSTRAINT request_id FOREIGN KEY (request_id) REFERENCES Requests(request_id);
 
 ALTER TABLE Requests
@@ -260,7 +293,6 @@ ADD CONSTRAINT reported_to_Employee_id FOREIGN KEY (reported_to_Employee_id) REF
 ALTER TABLE Employees
 ADD CONSTRAINT account_id FOREIGN KEY (account_id) REFERENCES Account_type(account_id)
 ADD CONSTRAINT residency_no FOREIGN KEY (residency_no) REFERENCES Resident_Management(residency_no);
-
 
 
 COMMIT;
