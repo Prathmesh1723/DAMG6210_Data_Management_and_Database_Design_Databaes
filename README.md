@@ -1,9 +1,5 @@
-RESIDENTIAL MANAGEMENT SYSTEM
 
-
-* PROBLEM STATEMENT
-
-
+# RESIDENTIAL MANAGEMENT SYSTEM
 The goal is to design and develop a comprehensive Residential Management System using Oracle database that will enable property managers to automate and streamline their operations, including tenant and lease management, rent and bill collection, maintenance, and repair tracking.
 
 
