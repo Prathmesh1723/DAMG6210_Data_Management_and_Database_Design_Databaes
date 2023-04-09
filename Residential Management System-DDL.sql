@@ -82,7 +82,15 @@ INSERT INTO Account_type (account_id, account_type, first_name, last_name, age, 
   select  6056, 'employee', 'Steven', 'Wilson', 45, 'stevenwilson@example.com', '345-67-8901', 'password7' from dual union all
   select  6066, 'owner', 'Steff', 'Wild', 35, 'steff@example.com', '345-67-8601', 'password8' from dual union all
   select  6070, 'owner', 'Derek', 'Roy', 65, 'derekRoy@example.com', '345-67-8801', 'password9' from dual union all
-  select  6047, 'tenant', 'Karen', 'Miller', 32, 'karenmiller@example.com', '678-90-1234', 'password11' from dual;
+  select  6047, 'tenant', 'Karen', 'Miller', 32, 'karenmiller@example.com', '678-90-1234', 'password11' from dual union all
+  SELECT  6080, 'tenant', 'Michael', 'Jones', 42, 'michaeljones@example.com', '123-45-1234', 'password12' FROM dual UNION ALL
+  SELECT 6090, 'owner', 'Jane', 'Smith', 55, 'janesmith@example.com', '567-89-0123', 'password13' FROM dual UNION ALL
+  SELECT 6100, 'employee', 'Thomas', 'Brown', 23, 'thomasbrown@example.com', '901-23-3456', 'password14' FROM dual UNION ALL 
+  SELECT 6110, 'tenant', 'Amanda', 'Davis', 27, 'amandadavis@example.com', '345-67-1234', 'password15' FROM dual UNION ALL 
+  SELECT 6120, 'owner', 'Mark', 'Johnson', 60, 'markjohnson@example.com', '789-12-3450', 'password16' FROM dual UNION ALL 
+  SELECT 6130, 'employee', 'Jennifer', 'Wilson', 31, 'jenniferwilson@example.com', '234-56-7891', 'password17' FROM dual UNION ALL
+  SELECT 6140, 'employee', 'Brian', 'Lee', 48, 'brianlee@example.com', '901-24-5678', 'password18' FROM dual UNION ALL 
+
 
 
 -- Create the Tenant table
@@ -97,6 +105,9 @@ INSERT INTO Tenant (tenant_id, account_id, contact_number)
   select 1063, 6042,2345678901 from dual union all
   select 1066, 6043,3456789012 from dual union all
   select 1206, 6044,4567890123 from dual union all
+  SELECT 1071, 6080, 8983303773 from dual union all
+  SELECT 1261, 6110, 7276118846 from dual union all
+  SELECT 1289, 6160, 9422539140 from dual union all
   select 1008, 6047,4567889504 from dual;
   
 -- Create the Owner table
@@ -110,6 +121,10 @@ INSERT INTO Owner (owner_id, account_id)
 select 11,  6041 from dual union all
 select 18,  6043 from dual union all
 select 21,  6066 from dual union all
+SELECT 73,  6090 from dual union all
+SELECT 69,  6120 from dual union all
+SELECT 84,  6150 from dual union all
+SELECT 76,  6170 from dual union all
 select 14,  6070 from dual;
 
 -- Create the Lease_agreement table
@@ -158,7 +173,12 @@ select 101, 11, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
 select 102, 11, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
 select 103, 18, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2002 from dual union all
 select 108, 14, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
-select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual;
+select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual union all
+SELECT 105, 73, 'B403', 'flat', 'Y', 'Y', 'Y', 2, 2, 2003 from dual union all
+SELECT 106, 69, 'B405', 'apartment', 'Y', 'N', 'Y', 2, 1, 2303 from dual union all
+SELECT 107, 84, 'B407', 'condo', 'N', 'N', 'Y', 1, 1, 3002 from dual union all
+SELECT 109, 76, 'B503', 'flat', 'Y', 'Y', 'Y', 2, 1, 7248 from dual union all
+SELECT 110, 14, 'B512', 'flat', 'N', 'Y', 'Y', 1, 2, 7250 from dual; 
 
 
 -- Create the Resident Management Table
@@ -211,7 +231,10 @@ CREATE TABLE Employees (
 INSERT INTO Employees (employee_id, account_id, role_id, residency_no)
 select 22101, 6045, 1, 2002 from dual union all
 select 22122, 6055, 2, 2002 from dual union all
-select 22100, 6056, 1, 1002 from dual;
+select 22100, 6056, 1, 1002 from dual union all
+SELECT 21200, 6100, 2, 1002 from dual union all
+SELECT 22300, 6130, 1, 1001 from dual union all
+SELECT 23200, 6140, 2, 1001 from dual;
 
 CREATE TABLE Roles (
     role_id NUMBER PRIMARY KEY,
@@ -231,11 +254,6 @@ CREATE TABLE Lease_Payments (
     lease_no NUMBER REFERENCES Lease_Agreement(lease_no),
     late_fees NUMBER
 );
-
-INSERT INTO Lease_Payments (lease_payment_id, payment_type, payment_date, payment_amount, lease_no, late_fees)
-select 111, 'Cash', TO_DATE('2022-01-15', 'YYYY-MM-DD'), 1000, 1000, NULL from dual union all
-select 112, 'Credit Card', TO_DATE('2022-02-15', 'YYYY-MM-DD'), 1200, 1200, NULL from dual union all
-select 114, 'Check', TO_DATE('2022-03-15', 'YYYY-MM-DD'), 1500, 1080, 50 from dual ;
 
 --Create Security Deposit Returns Table
 CREATE TABLE security_Deposit_Return (
