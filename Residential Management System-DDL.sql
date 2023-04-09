@@ -90,6 +90,9 @@ INSERT INTO Account_type (account_id, account_type, first_name, last_name, age, 
   SELECT 6120, 'owner', 'Mark', 'Johnson', 60, 'markjohnson@example.com', '789-12-3450', 'password16' FROM dual UNION ALL 
   SELECT 6130, 'employee', 'Jennifer', 'Wilson', 31, 'jenniferwilson@example.com', '234-56-7891', 'password17' FROM dual UNION ALL
   SELECT 6140, 'employee', 'Brian', 'Lee', 48, 'brianlee@example.com', '901-24-5678', 'password18' FROM dual UNION ALL 
+   SELECT 6150, 'owner', 'Sarah', 'Taylor', 37, 'sarahtaylor@example.com', '345-67-9012', 'password19' FROM dual UNION ALL
+  SELECT 6160, 'tenant', 'Robert', 'White', 29, 'robertwhite@example.com', '678-90-2345', 'password20' FROM dual UNION ALL 
+  SELECT 6170, 'owner', 'Christina', 'Anderson', 50, 'christinaanderson@example.com', '345-67-7890', 'password21' FROM dual;
 
 
 
@@ -254,6 +257,10 @@ CREATE TABLE Lease_Payments (
     lease_no NUMBER REFERENCES Lease_Agreement(lease_no),
     late_fees NUMBER
 );
+INSERT INTO Lease_Payments (lease_payment_id, payment_type, payment_date, payment_amount, lease_no, late_fees)
+select 111, 'Cash', TO_DATE('2022-01-15', 'YYYY-MM-DD'), 1000, 1000, NULL from dual union all
+select 112, 'Credit Card', TO_DATE('2022-02-15', 'YYYY-MM-DD'), 1200, 1200, NULL from dual union all
+select 114, 'Check', TO_DATE('2022-03-15', 'YYYY-MM-DD'), 1500, 1080, 50 from dual ;
 
 --Create Security Deposit Returns Table
 CREATE TABLE security_Deposit_Return (
