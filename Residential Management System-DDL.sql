@@ -105,6 +105,9 @@ INSERT INTO Tenant (tenant_id, account_id, contact_number)
   select 1063, 6042,2345678901 from dual union all
   select 1066, 6043,3456789012 from dual union all
   select 1206, 6044,4567890123 from dual union all
+  SELECT 1071, 6080, 8983303773 from dual union all
+  SELECT 1261, 6110, 7276118846 from dual union all
+  SELECT 1289, 6160, 9422539140 from dual union all
   select 1008, 6047,4567889504 from dual;
   
 -- Create the Owner table
@@ -118,6 +121,10 @@ INSERT INTO Owner (owner_id, account_id)
 select 11,  6041 from dual union all
 select 18,  6043 from dual union all
 select 21,  6066 from dual union all
+SELECT 73,  6090 from dual union all
+SELECT 69,  6120 from dual union all
+SELECT 84,  6150 from dual union all
+SELECT 76,  6170 from dual union all
 select 14,  6070 from dual;
 
 -- Create the Lease_agreement table
