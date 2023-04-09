@@ -174,7 +174,11 @@ select 102, 11, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
 select 103, 18, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2002 from dual union all
 select 108, 14, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
 select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual union all
-
+SELECT 105, 73, 'B403', 'flat', 'Y', 'Y', 'Y', 2, 2, 2003 from dual union all
+SELECT 106, 69, 'B405', 'apartment', 'Y', 'N', 'Y', 2, 1, 2303 from dual union all
+SELECT 107, 84, 'B407', 'condo', 'N', 'N', 'Y', 1, 1, 3002 from dual union all
+SELECT 109, 76, 'B503', 'flat', 'Y', 'Y', 'Y', 2, 1, 7248 from dual union all
+SELECT 110, 14, 'B512', 'flat', 'N', 'Y', 'Y', 1, 2, 7250 from dual; 
 
 
 -- Create the Resident Management Table
@@ -228,7 +232,9 @@ INSERT INTO Employees (employee_id, account_id, role_id, residency_no)
 select 22101, 6045, 1, 2002 from dual union all
 select 22122, 6055, 2, 2002 from dual union all
 select 22100, 6056, 1, 1002 from dual union all
-
+SELECT 21200, 6100, 2, 1002 from dual union all
+SELECT 22300, 6130, 1, 1001 from dual union all
+SELECT 23200, 6140, 2, 1001 from dual;
 
 CREATE TABLE Roles (
     role_id NUMBER PRIMARY KEY,
@@ -248,11 +254,6 @@ CREATE TABLE Lease_Payments (
     lease_no NUMBER REFERENCES Lease_Agreement(lease_no),
     late_fees NUMBER
 );
-
-INSERT INTO Lease_Payments (lease_payment_id, payment_type, payment_date, payment_amount, lease_no, late_fees)
-select 111, 'Cash', TO_DATE('2022-01-15', 'YYYY-MM-DD'), 1000, 1000, NULL from dual union all
-select 112, 'Credit Card', TO_DATE('2022-02-15', 'YYYY-MM-DD'), 1200, 1200, NULL from dual union all
-select 114, 'Check', TO_DATE('2022-03-15', 'YYYY-MM-DD'), 1500, 1080, 50 from dual ;
 
 --Create Security Deposit Returns Table
 CREATE TABLE security_Deposit_Return (
