@@ -82,7 +82,15 @@ INSERT INTO Account_type (account_id, account_type, first_name, last_name, age, 
   select  6056, 'employee', 'Steven', 'Wilson', 45, 'stevenwilson@example.com', '345-67-8901', 'password7' from dual union all
   select  6066, 'owner', 'Steff', 'Wild', 35, 'steff@example.com', '345-67-8601', 'password8' from dual union all
   select  6070, 'owner', 'Derek', 'Roy', 65, 'derekRoy@example.com', '345-67-8801', 'password9' from dual union all
-  select  6047, 'tenant', 'Karen', 'Miller', 32, 'karenmiller@example.com', '678-90-1234', 'password11' from dual;
+  select  6047, 'tenant', 'Karen', 'Miller', 32, 'karenmiller@example.com', '678-90-1234', 'password11' from dual union all
+  SELECT  6080, 'tenant', 'Michael', 'Jones', 42, 'michaeljones@example.com', '123-45-1234', 'password12' FROM dual UNION ALL
+  SELECT 6090, 'owner', 'Jane', 'Smith', 55, 'janesmith@example.com', '567-89-0123', 'password13' FROM dual UNION ALL
+  SELECT 6100, 'employee', 'Thomas', 'Brown', 23, 'thomasbrown@example.com', '901-23-3456', 'password14' FROM dual UNION ALL 
+  SELECT 6110, 'tenant', 'Amanda', 'Davis', 27, 'amandadavis@example.com', '345-67-1234', 'password15' FROM dual UNION ALL 
+  SELECT 6120, 'owner', 'Mark', 'Johnson', 60, 'markjohnson@example.com', '789-12-3450', 'password16' FROM dual UNION ALL 
+  SELECT 6130, 'employee', 'Jennifer', 'Wilson', 31, 'jenniferwilson@example.com', '234-56-7891', 'password17' FROM dual UNION ALL
+  SELECT 6140, 'employee', 'Brian', 'Lee', 48, 'brianlee@example.com', '901-24-5678', 'password18' FROM dual UNION ALL 
+
 
 
 -- Create the Tenant table
@@ -158,7 +166,8 @@ select 101, 11, 'B101', 'flat', 'Y', 'Y', 'Y', 2, 1, 1001  from dual union all
 select 102, 11, 'B101', 'flat', 'N', 'N', 'N', 1, 1, 1002 from dual union all
 select 103, 18, 'B201', 'condo', 'Y', 'N', 'Y', 3, 2, 2002 from dual union all
 select 108, 14, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
-select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual;
+select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual union all
+
 
 
 -- Create the Resident Management Table
@@ -211,7 +220,8 @@ CREATE TABLE Employees (
 INSERT INTO Employees (employee_id, account_id, role_id, residency_no)
 select 22101, 6045, 1, 2002 from dual union all
 select 22122, 6055, 2, 2002 from dual union all
-select 22100, 6056, 1, 1002 from dual;
+select 22100, 6056, 1, 1002 from dual union all
+
 
 CREATE TABLE Roles (
     role_id NUMBER PRIMARY KEY,
