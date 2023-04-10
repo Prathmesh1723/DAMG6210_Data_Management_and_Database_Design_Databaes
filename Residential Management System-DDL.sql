@@ -179,25 +179,27 @@ select 108, 14, 'B201', 'condo', 'N', 'Y', 'N', 2, 1, 2002 from dual union all
 select 104, 21, 'B301', 'apartment', 'Y', 'Y', 'N', 1, 1, 1001 from dual union all
 SELECT 105, 73, 'B403', 'flat', 'Y', 'Y', 'Y', 2, 2, 2003 from dual union all
 SELECT 106, 69, 'B405', 'apartment', 'Y', 'N', 'Y', 2, 1, 2303 from dual union all
-SELECT 107, 84, 'B407', 'condo', 'N', 'N', 'Y', 1, 1, 3002 from dual union all
-SELECT 109, 76, 'B503', 'flat', 'Y', 'Y', 'Y', 2, 1, 7248 from dual union all
-SELECT 110, 14, 'B512', 'flat', 'N', 'Y', 'Y', 1, 2, 7250 from dual; 
+SELECT 107, 84, 'B407', 'condo', 'N', 'N', 'Y', 1, 1, 2032 from dual union all
+SELECT 109, 76, 'B503', 'flat', 'Y', 'Y', 'Y', 2, 1, 2303 from dual union all
+SELECT 110, 14, 'B512', 'flat', 'N', 'Y', 'Y', 1, 2, 2032 from dual; 
 
 
 -- Create the Resident Management Table
 CREATE TABLE Resident_Management (
   residency_no NUMBER(10) PRIMARY KEY,
-  residency_first_name VARCHAR2(50) NOT NULL,
-  residency_last_name VARCHAR2(50) NOT NULL,
+  residency_name VARCHAR2(50) NOT NULL,
   request_id NUMBER(10) NOT NULL,
   address_line1 VARCHAR2(100) NOT NULL,
   address_line2 VARCHAR2(100) NOT NULL
 );
 
-INSERT INTO Resident_Management (residency_no, residency_first_name, residency_last_name, request_id, address_line1, address_line2)
-select 1001, 'John', 'Doe', 199, '123 Main St', 'Apt 4B' from dual union all
-select 1002, 'Jane', 'Smith', 202, '456 Elm St', 'Unit 2' from dual union all
-select 2002, 'Bob', 'Johnson', 224, '789 Oak St', 'Suite 10' from dual;
+INSERT INTO Resident_Management (residency_no, residency_name, request_id, address_line1, address_line2)
+select 1001, 'Fineberg', 199, '123 Main St', 'Apt 4B' from dual union all
+select 1002, 'Janestreet', 202, '456 Elm St', 'Unit 2' from dual union all
+select 2002, 'Bobsville',  224, '789 Oak St', 'Suite 10' from dual union all
+select 2003, 'Johnathanville', 199, '123 Main St', 'Apt 4B' from dual union all
+select 2303, 'Bostonmoverse', 202, '456 Elm St', 'Unit 2' from dual union all
+select 2032, 'Jview', 224, '789 Oak St', 'Suite 10' from dual;
 
 CREATE TABLE Requests (
     request_id NUMBER PRIMARY KEY,
