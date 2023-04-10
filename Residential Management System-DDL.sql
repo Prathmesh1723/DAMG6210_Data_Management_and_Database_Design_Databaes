@@ -299,8 +299,13 @@ INSERT INTO Inspection_check (inspection_id, date_logged, inspected_by, Damages_
 select 111, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 22101, 'N', 0, 101 from dual union all
 select 211, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 22100, 'Y', 500, 103 from dual union all
 select 303, TO_DATE('2022-03-01', 'YYYY-MM-DD'), 22100, 'N', 0, 102 from dual union all
-select 401, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 22101, 'Y', 1000, 108 from dual union all
-
+select 401, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 22101, 'Y', 1000, 108 from dual;
+select 407, TO_DATE('2022-04-13', 'YYYY-MM-DD'), 22100, 'Y', 1000, 104 from dual union all
+select 150, TO_DATE('2022-01-09', 'YYYY-MM-DD'), 22101, 'Y', 1000, 106 from dual union all
+select 265, TO_DATE('2022-02-18', 'YYYY-MM-DD'), 22100, 'N', 0, 110 from dual union all
+select 319, TO_DATE('2022-03-13', 'YYYY-MM-DD'), 22101, 'Y', 1000, 105 from dual union all
+select 380, TO_DATE('2022-03-29', 'YYYY-MM-DD'), 22101, 'Y', 1000, 107 from dual union all
+select 409, TO_DATE('2022-08-04', 'YYYY-MM-DD'), 22100, 'N', 0, 109 from dual;
 
 
 ALTER TABLE security_Deposit_Return
