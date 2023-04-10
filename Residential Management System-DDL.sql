@@ -149,7 +149,11 @@ CREATE TABLE Lease_agreement (
 INSERT INTO Lease_agreement (lease_no, unit_no, owner_id, tenant_id, lease_Date, lease_Startdate, lease_Enddate, lease_Term, security_Deposit, lease_Status, monthly_Rent)
 select 1200, 101, 11, 1063, TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 1000 from dual union all
 select 1000, 102, 11, 1066,  TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 24, 1500, 1, 800 from dual union all
-select 1080, 108, 21, 1008, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 1600 from dual;
+select 1080, 108, 21, 1008, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1000, 1, 1600 from dual union all
+select 1100, 104, 73, 1071, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 2000 from dual union all
+select 1500, 110, 84, 1289, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2500, 1, 1200 from dual union all
+select 1130, 107, 69, 1206, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 1500, 1, 1500 from dual union all
+select 1220, 105, 76, 1261, TO_DATE('2022-01-31', 'YYYY-MM-DD'), TO_DATE('2022-02-11', 'YYYY-MM-DD'), TO_DATE('2023-01-31', 'YYYY-MM-DD'), 12, 2000, 1, 2000 from dual;
 
 
 -- Create the house table
@@ -293,7 +297,9 @@ INSERT INTO Inspection_check (inspection_id, date_logged, inspected_by, Damages_
 select 111, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 22101, 'N', 0, 101 from dual union all
 select 211, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 22100, 'Y', 500, 103 from dual union all
 select 303, TO_DATE('2022-03-01', 'YYYY-MM-DD'), 22100, 'N', 0, 102 from dual union all
-select 401, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 22100, 'Y', 1000, 108 from dual;
+select 401, TO_DATE('2022-04-01', 'YYYY-MM-DD'), 22101, 'Y', 1000, 108 from dual union all
+
+
 
 ALTER TABLE security_Deposit_Return
 ADD CONSTRAINT lease_no FOREIGN KEY (lease_no) REFERENCES Lease_Agreement(lease_no);
