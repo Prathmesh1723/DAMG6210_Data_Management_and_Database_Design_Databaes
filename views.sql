@@ -1,44 +1,58 @@
-CREATE OR REPLACE PROCEDURE renew_lease(
-  p_lease_no IN LEASE_AGREEMENT.LEASE_NO%TYPE,
-  p_new_end_date IN LEASE_AGREEMENT.LEASE_ENDDATE%TYPE
-) AS
-  v_lease_status LEASE_AGREEMENT.LEASE_STATUS%TYPE;
-  v_lease_end_date LEASE_AGREEMENT.LEASE_ENDDATE%TYPE;
-  LEASE_COUNT NUMBER;
-BEGIN
-  -- Check if lease exists
-  SELECT COUNT(*) INTO LEASE_COUNT FROM LEASE_AGREEMENT WHERE LEASE_NO = p_lease_no;
-  IF LEASE_COUNT = 0 THEN
-    RAISE_APPLICATION_ERROR(-20001, 'Lease does not exist.');
-  END IF;
-  
-  -- Check if lease is active
-  SELECT LEASE_STATUS, LEASE_ENDDATE INTO v_lease_status, v_lease_end_date FROM LEASE_AGREEMENT WHERE LEASE_NO = p_lease_no;
-  IF v_lease_status <> 'Active' THEN
-    RAISE_APPLICATION_ERROR(-20002, 'Lease is not active.');
-  END IF;
-  
-  -- Check if new end date is greater than old end date
-  IF p_new_end_date <= v_lease_end_date THEN
-    RAISE_APPLICATION_ERROR(-20003, 'New end date must be greater than old end date.');
-  END IF;
-  
-  -- Renew lease
-  UPDATE LEASE_AGREEMENT SET LEASE_ENDDATE = p_new_end_date WHERE LEASE_NO = p_lease_no;
-  
-  -- Commit transaction
-  COMMIT;
-EXCEPTION
-  -- Rollback transaction on error
-  WHEN OTHERS THEN
-    ROLLBACK;
-    RAISE;
-END;
+-----------------VIEW 1-----------------------------------
+/* Lease_Agreement_View :
+- This view displays information about lease agreements, including the lease ID, tenant's first and last name, property address, lease start and end dates, monthly rent, and security deposit.
+- This view can be used to easily see all the lease agreements in the system and the details associated with each one.*/
 
---------------------------------------------------------------------
+CREATE VIEW Lease_Agreement_View AS
+SELECT l.lease_no, a.first_name AS tenant_first_name, a.last_name AS tenant_last_name,
+       r.address_line1 || ' ' || r.address_line2 AS property_address,
+       l.lease_startdate, l.lease_startdate + INTERVAL '1' YEAR AS lease_enddate, 
+       l.monthly_rent
+FROM Lease_agreement l
+JOIN Tenant t ON l.tenant_id = t.tenant_id
+JOIN Account_type a ON a.account_id = t.account_id
+JOIN House h ON l.unit_no = h.unit_no
+JOIN Resident_Management r ON h.residency_no = r.residency_no;
 
---test to check if lease exist
-BEGIN
-  renew_lease(1, TO_DATE('2023-02-01', 'YYYY-MM-DD'));
-END;
+SELECT * FROM Lease_Agreement_View;
 
+SET PAGESIZE 100;
+COLUMN PROPERTY_ADDRESS FORMAT A20;
+
+---------------- VIEW 2-------------------------------------------
+/* Maintenance_Request_View -
+resulting view contains data on requests including request type, priority, status, and dates, as well as the unit number, employee ID, and account details of those involved*/
+
+CREATE VIEW request_info AS
+SELECT r.request_id, h.unit_no, e.employee_id, e.account_id, a.first_name, a.last_name, a.email, r.request_type, r.request_priority, r.date_logged, r.req_status, r.due_date, r.resolved_date
+FROM Requests r
+INNER JOIN House h ON r.logged_by = h.unit_no
+LEFT JOIN Employees e ON r.reported_to_Employee_id = e.employee_id
+LEFT JOIN Account_type a ON e.account_id = a.account_id;
+
+SELECT * FROM request_info;
+
+---------------------- VIEW 3 ------------------------------------------------------
+/* Lease_Payment_View:
+- This view displays information about lease payments, including the payment ID, tenant's first and last name, property address, payment amount, and payment date.
+- This view can be used to track lease payments, see when payments were made, and ensure that tenants are paying their rent on time.*/
+
+CREATE OR REPLACE VIEW Lease_Payment_View AS
+SELECT lp.lease_payment_id AS Payment_ID,
+       h.unit_no AS Unit,
+       a.first_name AS First_Name,
+       a.last_name AS Last_Name,
+       rm.address_line1 || ', ' || rm.address_line2 AS Property_Address,
+       lp.payment_status AS Status,
+       lp.payment_amount AS Payment_Amount,
+       lp.payment_duedate AS Payment_duedate,
+       lp.payment_date AS Payment_Date,
+       lp.late_fees
+FROM Lease_Payments lp
+JOIN Lease_agreement la ON lp.lease_no = la.lease_no
+JOIN Tenant t ON la.tenant_id = t.tenant_id
+JOIN Account_type a ON t.account_id = a.account_id
+JOIN House h ON la.unit_no = h.unit_no
+JOIN Resident_Management rm ON h.residency_no = rm.residency_no;
+
+SELECT * FROM Lease_Payment_View;
