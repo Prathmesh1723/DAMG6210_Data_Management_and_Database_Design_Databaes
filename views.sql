@@ -3,10 +3,10 @@
 - This view displays information about lease agreements, including the lease ID, tenant's first and last name, property address, lease start and end dates, monthly rent, and security deposit.
 - This view can be used to easily see all the lease agreements in the system and the details associated with each one.*/
 
-CREATE VIEW Lease_Agreement_View AS
+CREATE OR REPLACE VIEW Lease_Agreement_View AS
 SELECT l.lease_no, a.first_name AS tenant_first_name, a.last_name AS tenant_last_name,
        r.address_line1 || ' ' || r.address_line2 AS property_address,
-       l.lease_startdate, l.lease_startdate + INTERVAL '1' YEAR AS lease_enddate, 
+       l.lease_startdate, l.lease_startdate + interval '1' month * l.lease_term AS lease_enddate, 
        l.monthly_rent
 FROM Lease_agreement l
 JOIN Tenant t ON l.tenant_id = t.tenant_id
