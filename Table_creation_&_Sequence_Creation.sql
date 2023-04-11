@@ -1,4 +1,10 @@
-CREATE OR REPLACE PROCEDURE resident_operations(ObjName varchar2, ObjType varchar2)
+CREATE OR REPLACE PACKAGE insertion_procedures AS
+    PROCEDURE resident_operations(ObjName varchar2, ObjType varchar2);
+END insertion_procedures;
+/
+
+CREATE OR REPLACE PACKAGE BODY insertion_procedures AS
+PROCEDURE resident_operations(ObjName varchar2, ObjType varchar2)
 IS
     T_counter number := 0;
 BEGIN
@@ -33,8 +39,11 @@ BEGIN
             EXECUTE IMMEDIATE 'DROP PROCEDURE' || ObjName;
         end if;
     end if;
-END;
+END resident_operations;
+END insertion_procedures;
 /
+
+
 
 
 call resident_operations('ACCOUNT_TYPE', 'TABLE');
