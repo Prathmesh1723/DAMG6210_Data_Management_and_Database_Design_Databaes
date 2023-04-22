@@ -7,11 +7,11 @@ Contributors - Aniket Bhore, Prathamesh Pardeshi, Satadru Debnath, Vedant Deshpa
 
 The goal is to design and develop a comprehensive Residential Management System using Oracle database that will enable property managers to automate and streamline their operations, including tenant and lease management, rent and bill collection, maintenance, and repair tracking.
 
-* 1. PROBLEM STATEMENT
+# 1. PROBLEM STATEMENT
 The goal is to design and develop a comprehensive Residential Management System using Oracle database that will enable property managers to automate and streamline their operations, including tenant and lease management, rent and bill collection, maintenance, and repair tracking.
 
 
-* 2. BUSINESS PROBLEMS ADDRESSED
+# 2. BUSINESS PROBLEMS ADDRESSED
 
 1.	Provide an easy-to-use platform for landlords and tenants to manage lease agreements, payments, maintenance requests, and security deposits online.
 2.	Provide a centralized database for lease agreements and tenant information to streamline the process of creating and renewing leases, as well as managing tenant turnover.
